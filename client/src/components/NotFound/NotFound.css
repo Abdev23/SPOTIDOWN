@@ -1,0 +1,15 @@
+
+/* 
+============
+NOTFOUND CSS
+============
+*/
+
+.not-found-card-body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: red;
+  font-size: 40px;
+  text-align: center;
+}

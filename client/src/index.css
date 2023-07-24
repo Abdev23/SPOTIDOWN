@@ -1,0 +1,181 @@
+
+/*
+=========
+VARIABLES
+=========
+*/
+
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap');
+
+:root {
+    /* dark shades of primary color*/
+    --clr-primary-1: #0b5124;
+    --clr-primary-2: #117a37;
+    --clr-primary-3: #16a249;
+    --clr-primary-4: #19b752;
+
+    /* primary/main color */
+    --clr-primary-5: #1ccb5b;
+
+    /* lighter shades of primary color */
+    --clr-primary-6: #33d06b;
+    --clr-primary-7: #49d57c;
+    --clr-primary-8: #60db8c;
+    --clr-primary-9: #77e09d;
+    --clr-primary-10: #8ee5ad;
+    --clr-primary-11: #7EC98D;
+
+    /* darkest grey - used for headings */
+    --clr-grey-1: #636363;
+    --clr-grey-2: #737373;
+    --clr-grey-3: #848484;
+    --clr-grey-4: #959595;
+
+    /* grey used for paragraphs */
+    --clr-grey-5: #a5a5a5;
+    --clr-grey-6: #aeaeae;
+    --clr-grey-7: #b7b7b7;
+    --clr-grey-8: #c0c0c0;
+    --clr-grey-9: #c9c9c9;
+    --clr-grey-10: #d2d2d2;
+
+    --clr-white: #fff;
+    --clr-black: #121212;
+    --clr-red-dark: hsl(360, 67%, 44%);
+    --clr-red-light: hsl(360, 71%, 66%);
+    --clr-green-dark: hsl(125, 67%, 44%);
+    --clr-green-light: hsl(125, 71%, 66%);
+    --transition: all 0.3s linear;
+    --spacing: 0.1rem;
+    --radius: 0.5rem;
+    --light-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    --dark-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    --max-width: 1170px;
+    --fixed-width: 620px;
+    --view-width: 90vw;
+    --small-text: 0.875rem;
+    --extra-small-text: 0.7em;
+
+    /* rest of the vars */
+    --backgroundColor: var(--grey-50);
+    --textColor: var(--grey-900);
+    --borderRadius: 0.25rem;
+    --border-radius: 5px;
+
+    --letterSpacing: 1px;
+    /* box shadow*/
+    --shadow-1: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+    --shadow-2: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    --shadow-3: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    --shadow-4: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    --shadow-main: 0 4px 20px rgba(0,0,0,.1);
+}
+
+/*
+=============
+GLOBAL STYLES
+=============
+*/
+
+*,
+::after,
+::before {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+    font-family:
+    'DM Sans',
+    'Montserrat',
+                 'Ubuntu',
+                 sans-serif,
+                 "Apple Color Emoji";
+    background: var(--clr-black);
+    color: var(--clr-grey-1);
+    line-height: 1.5;
+    font-size: 0.875rem;
+
+    /* display: flex; */
+    /* flex-direction: column; */
+    /* min-height: 100vh; */
+}
+
+ul {
+  list-style-type: none;
+}
+
+a {
+  text-decoration: none;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5 {
+  letter-spacing: var(--spacing);
+  text-transform: capitalize;
+  line-height: 1.25;
+  margin-bottom: 0.75rem;
+}
+
+h1 {
+  font-size: 3rem;
+}
+
+h2 {
+  font-size: 2rem;
+}
+
+h3 {
+  font-size: 1.25rem;
+}
+
+h4 {
+  font-size: 0.875rem;
+}
+
+h5 {
+    font-size: clamp(0.875rem, 1.5vw, 1.5rem); /* Tiny heading */
+}
+
+p {
+  margin-bottom: 1.25rem;
+  color: var(--clr-grey-5);
+}
+
+@media screen and (min-width: 800px) {
+  h1 {
+    font-size: 4rem;
+  }
+
+  h2 {
+    font-size: 2.5rem;
+  }
+
+  h3 {
+    font-size: 1.75rem;
+  }
+
+  h4 {
+    font-size: 1rem;
+  }
+
+  body {
+    font-size: 1rem;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    line-height: 1;
+  }
+}

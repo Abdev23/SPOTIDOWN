@@ -1,0 +1,231 @@
+
+/* 
+========
+CARD CSS
+========
+*/
+
+.card {
+  width:400px;
+  background: #181818;
+  color: white;
+  border-radius: 11px;
+  padding: 7px;
+  margin: 10px;
+  cursor: pointer;
+}
+
+.card:hover {
+  background-color: #232323;
+  transition: 0.3s ease-in-out;
+}
+
+.button-layout {
+  padding:7px;
+  display:-webkit-box;
+  display:-ms-flexbox;
+  display:flex;
+  margin-bottom: 7px;
+  user-select: none;
+  -moz-user-select:none;
+  -webkit-user-select: none;
+}
+
+.card > .content-layout {
+  display:-webkit-box;
+  display:-ms-flexbox;
+  display:flex;
+  margin: 0px 10px;
+}
+
+.card > .content-layout > figure {
+  margin-bottom: 7px;
+}
+
+.card > .content-layout > figure.smallImg {
+  margin-top: 20px;
+}
+
+.card > .content-layout > figure > .image-wrapper {
+  position: relative;
+  display: flex;
+  width: 160px;
+  padding: 0px 0;
+  border-radius: 8px;
+  background: var(--clr-white);
+  flex-direction: column;
+  align-items: center;
+}
+
+.card > .content-layout > figure > .image-wrapper > .progress-bar {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  height: 130px;
+  width: 130px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+}
+
+.card > .content-layout > figure > .image-wrapper > .progress-bar > .progress-bar-circle {
+  transform: rotate(-90deg);
+  transform-origin: center;
+  filter: drop-shadow(0px -1px 2px rgba(0, 0, 0, 0.7));
+}
+
+.card > .content-layout > figure > .image-wrapper > .progress-bar > .progress-bar-value {
+  position: relative;
+  font-size: 1.82rem;
+  font-weight: 600;
+  z-index: 3;
+  filter: drop-shadow(0px -1px 2px rgba(0, 0, 0, 0.7));
+}
+
+.card > .content-layout > figure > .image-wrapper > img {
+  position: relative;
+  width: 160px;
+  border-radius: 7px;
+  z-index: 0;
+}
+
+.card > .content-layout > figure > .image-wrapper > img:hover {
+  background: linear-gradient(0deg, #00000088 30%, #ffffff44 100%);
+  filter: drop-shadow(0 0.5rem 1rem rgba(0, 0, 0, 0.6));
+  transition: 0.3s ease-in-out;
+}
+
+.card > .content-layout > .content {
+  -ms-flex-preferred-size: 100%;
+  flex-basis: 100%;
+  margin-left: 10px;
+}
+
+.card > .content-layout > .content > .card-info-wrapper {
+  display: table;
+  table-layout: fixed;
+  width: 100%;
+}
+
+.card > .content-layout > .content > .card-info-wrapper > .card-type {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.card > .content-layout > .content > .card-info-wrapper > .title {
+  font-weight: 400;
+  font-size: 1.4em;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.card > .content-layout > .content > .card-info-wrapper > .artist {
+  color: #8A8C8D;
+  margin: 7px 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.card > .content-layout > .content > .card-info-wrapper > .content-bottom-one {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.card > .content-layout > .content > .card-info-wrapper > .content-bottom-two {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.button-b {
+  font-weight: 700;
+  font-size:1.34em;
+  margin:4px;
+  border-radius: 6px;
+  text-align: center;
+  text-decoration: none;
+  padding: 12px 0px;
+  background:#1DB954;
+  border:3px solid #1DB954;
+  color: #191414;
+  -ms-flex-preferred-size: 100%;
+  flex-basis: 100%;
+  -webkit-transition: 0.2s ease-in-out;
+  transition: 0.2s ease-in-out;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+
+.button-b:hover{
+  background:white;
+  border-color:#191414;
+  color: #191414;
+  border:3px solid white;
+}
+
+.button-b.clickable {
+  pointer-events: none;
+  opacity: 0.6;
+  background: var(--clr-primary-11);
+  color: var(--clr-black);
+  border:3px solid var(--clr-primary-11);
+}
+
+.button-b.bordered {
+  border:3px solid #1DB954;
+  background: transparent;
+  color: #1DB954;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.button-b.bordered:hover{
+  background:#252525;
+  border-color:#191414;
+  color: white;
+  border:3px solid white;
+}
+
+.button-b.bordered.clickable {
+  pointer-events: none;
+  opacity: 0.6;
+  background: transparent;
+  color: var(--clr-primary-11);
+  border:3px solid var(--clr-primary-11);
+}
+
+.card-type {
+  color: var(--clr-black);
+  background: var(--clr-primary-5);
+  border: 2px solid var(--clr-primary-5);
+  letter-spacing: normal;
+  border-radius: 6px;
+  padding: 3px 2px;
+  text-align: center;
+  width: 40%;
+  box-sizing: border-box;
+}
+
+@media screen and (max-width: 600px) {
+  .card {
+    width: 90%;
+    display: block;
+    margin: 5px;
+    overflow: hidden;
+  }
+
+  .card-type {
+    width: 50%;
+  }
+}
