@@ -108,6 +108,7 @@ function App() {
       if (navigator.onLine) {
         checkSpotifyAPIStatus()
           .then((isOnline) => {
+            console.log(`you're online`);
             setSpotifyOnline(isOnline);
           });
       }
@@ -128,7 +129,7 @@ function App() {
 
     if (!online)
     {
-      console.log('youreeeeeee offline');
+      console.log(`you're offline`);
       timer = setTimeout(() => {
         setOffline(true);
         setTimeout(() => {
