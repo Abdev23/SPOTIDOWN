@@ -23,6 +23,7 @@ const getLocalStorage = () => {
 };
 
 const SearchBar = () => {
+  console.log('been caled first');
   const [loading, setLoading] = useState(false);
   const [searchLimit, setSearchLimit] = useState(1);
   const [accessToken, setAccessToken] = useState('');

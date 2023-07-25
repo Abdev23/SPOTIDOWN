@@ -3,10 +3,11 @@ import React, { useState, useEffect, useRef } from 'react';
 import { renderToString } from 'react-dom/server';
 import {
   MdDownload,
-  MdPlayCircleFilled,
+  MdDownloading,
   MdOutlineDownloadDone,
   MdFileDownloadOff,
-  MdAlbum
+  MdAlbum,
+  MdPlayCircleFilled,
 } from 'react-icons/md';
 
 import './Card.css';
@@ -16,6 +17,8 @@ const Card = ({ accessToken, metadata }) => {
 
   const progressBarCircleRef = useRef(null);
   const progressBarValueRef = useRef(null);
+  const downloadTapButtonRef = useRef(null);
+  const downloadArtButtonRef = useRef(null);
 
   const [duration, setDuration] = useState(12000);
   const [isDownloading, setIsDownloading] = useState(false);
@@ -98,6 +101,12 @@ const Card = ({ accessToken, metadata }) => {
     setIsClickable(false);
     const progressBar = progressBarCircleRef.current;
     const progressValue = progressBarValueRef.current;
+
+    const downloadTapButton = downloadTapButtonRef.current;
+    const downloadArtButton = downloadArtButtonRef.current;
+    console.log('downloading button content: ', downloadTapButton, downloadArtButton);
+    downloadTapButton.textContent = 'Downloading...';
+    downloadArtButton.textContent = 'Downloading...';
 
     const circumference = 2 * Math.PI * progressBar.getAttribute('r');
 
@@ -416,12 +425,14 @@ const Card = ({ accessToken, metadata }) => {
       <div className='button-layout'>
         <a className={`button-b ${isClickable ? '' : 'clickable'}`}
            onClick={(e) => POST_MUSIC_DATA()}
+           ref={downloadTapButtonRef}
         >
           <MdDownload />&nbsp;Download
         </a>
         
         <a className={`button-b bordered ${isClickable ? '' : 'clickable'}`}
            onClick={(e) => POST_MUSIC_ART()}
+           ref={downloadArtButtonRef}
         >
           <MdAlbum />&nbsp;Art
         </a>

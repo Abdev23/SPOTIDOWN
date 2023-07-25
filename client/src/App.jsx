@@ -66,15 +66,51 @@ const router = createBrowserRouter([
   }
 ]);
 
+const authParameters = {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/x-www-form-urlencoded'
+  },
+  body: 'grant_type=client_credentials&client_id='
+        + import.meta.env.VITE_CLIENT_ID
+        + '&client_secret='
+        + import.meta.env.VITE_CLIENT_SECRET
+}
+
+const checkSpotifyAPIStatus = async () => {
+  try
+  {
+    const response = await fetch(
+      'https://accounts.spotify.com/api/token',
+      authParameters
+    );
+    const data = await response.json();
+    return response.ok;
+  }
+  catch (err)
+  {
+    console.error('OPPS! API CONNECTION ERROR: ', err);
+    return false;
+  }
+};
 
 function App() {
   const [online, setOnline] = useState(navigator.onLine);
   const [offline, setOffline] = useState(false);
   const [offlineText, setOfflineText] = useState(false);
+  const [spotifyOnline, setSpotifyOnline] = useState(false);
 
   useEffect(() => {
     function checkOnlineStatus() {
       setOnline(navigator.onLine);
+
+      // Check Spotify API status when online status changes
+      if (navigator.onLine) {
+        checkSpotifyAPIStatus()
+          .then((isOnline) => {
+            setSpotifyOnline(isOnline);
+          });
+      }
     }
 
     checkOnlineStatus();
