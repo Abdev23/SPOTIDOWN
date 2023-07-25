@@ -3,13 +3,14 @@ import React, { useState, useEffect, useRef } from 'react';
 import { renderToString } from 'react-dom/server';
 import {
   MdDownload,
+  MdAlbum,
   MdDownloading,
   MdOutlineDownloadDone,
   MdFileDownloadOff,
-  MdAlbum,
-  MdPlayCircleFilled,
+  MdPlayCircleFilled
 } from 'react-icons/md';
 
+import { downloadReducer } from './Reducer';
 import './Card.css';
 
 
@@ -28,6 +29,8 @@ const Card = ({ accessToken, metadata }) => {
   const DownloadIconHtml = renderToString(DownloadIcon);
   const ArtIcon = React.createElement(MdAlbum);
   const ArtIconHtml =  renderToString(ArtIcon);
+  const DownloadingIcon = React.createElement(MdDownloading);
+  const DownloadingIconHtml = React.renderToString(DownloadingIcon);
   const DownloadDoneIcon = React.createElement(MdOutlineDownloadDone);
   const DownloadDoneIconHtml = renderToString(DownloadDoneIcon);
   const DownloadOffIcon = React.createElement(MdFileDownloadOff);
@@ -102,9 +105,9 @@ const Card = ({ accessToken, metadata }) => {
     const progressBar = progressBarCircleRef.current;
     const progressValue = progressBarValueRef.current;
 
-    const downloadTapButton = downloadTapButtonRef.current;
-    const downloadArtButton = downloadArtButtonRef.current;
-    console.log('downloading button content: ', downloadTapButton, downloadArtButton);
+    // const downloadTapButton = downloadTapButtonRef.current;
+    // const downloadArtButton = downloadArtButtonRef.current;
+    // console.log('downloading button content: ', downloadTapButton, downloadArtButton);
     // downloadTapButton.textContent = 'Downloading...';
     // downloadArtButton.textContent = 'Downloading...';
 

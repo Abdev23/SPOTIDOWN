@@ -105,8 +105,8 @@ const Card = ({ accessToken, metadata }) => {
     const downloadTapButton = downloadTapButtonRef.current;
     const downloadArtButton = downloadArtButtonRef.current;
     console.log('downloading button content: ', downloadTapButton, downloadArtButton);
-    downloadTapButton.textContent = 'Downloading...';
-    downloadArtButton.textContent = 'Downloading...';
+    // downloadTapButton.textContent = 'Downloading...';
+    // downloadArtButton.textContent = 'Downloading...';
 
     const circumference = 2 * Math.PI * progressBar.getAttribute('r');
 
