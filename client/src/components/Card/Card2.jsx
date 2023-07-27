@@ -1,16 +1,11 @@
 
-import React, { useState, useEffect, useRef } from 'react';
-import { renderToString } from 'react-dom/server';
+import React, { useState, useRef, useReducer } from 'react';
 import {
   MdDownload,
-  MdAlbum,
-  MdDownloading,
-  MdOutlineDownloadDone,
-  MdFileDownloadOff,
-  MdPlayCircleFilled
+  MdAlbum
 } from 'react-icons/md';
 
-import { downloadReducer } from './Reducer';
+import { downloadTAPReducer, downloadARTReducer, handleApiResponse } from './Handlers';
 import './Card.css';
 
 
@@ -24,17 +19,16 @@ const Card = ({ accessToken, metadata }) => {
   const [duration, setDuration] = useState(12000);
   const [isDownloading, setIsDownloading] = useState(false);
   const [isClickable, setIsClickable] = useState(true);
-
-  const DownloadIcon = React.createElement(MdDownload);
-  const DownloadIconHtml = renderToString(DownloadIcon);
-  const ArtIcon = React.createElement(MdAlbum);
-  const ArtIconHtml =  renderToString(ArtIcon);
-  const DownloadingIcon = React.createElement(MdDownloading);
-  const DownloadingIconHtml = React.renderToString(DownloadingIcon);
-  const DownloadDoneIcon = React.createElement(MdOutlineDownloadDone);
-  const DownloadDoneIconHtml = renderToString(DownloadDoneIcon);
-  const DownloadOffIcon = React.createElement(MdFileDownloadOff);
-  const DownloadOffIconHtml = renderToString(DownloadOffIcon);
+  const [downloadTAPState, dispatchTAPDownload] = useReducer(downloadTAPReducer, {
+    downloading: false,
+    status: 'Download',
+    icon: <MdDownload />,
+  });
+  const [downloadARTState, dispatchARTDownload] = useReducer(downloadARTReducer, {
+    downloading: false,
+    status: 'Download',
+    icon: <MdDownload />,
+  });
 
   const CARD_DATA = {
     image_src: '',
@@ -105,12 +99,6 @@ const Card = ({ accessToken, metadata }) => {
     const progressBar = progressBarCircleRef.current;
     const progressValue = progressBarValueRef.current;
 
-    // const downloadTapButton = downloadTapButtonRef.current;
-    // const downloadArtButton = downloadArtButtonRef.current;
-    // console.log('downloading button content: ', downloadTapButton, downloadArtButton);
-    // downloadTapButton.textContent = 'Downloading...';
-    // downloadArtButton.textContent = 'Downloading...';
-
     const circumference = 2 * Math.PI * progressBar.getAttribute('r');
 
     let startTime;
@@ -125,6 +113,15 @@ const Card = ({ accessToken, metadata }) => {
       {
         setIsDownloading(false);
         setIsClickable(true);
+
+        dispatchTAPDownload({ type: 'DOWNLOAD_SUCCESS' });
+        dispatchARTDownload({ type: 'DOWNLOAD_SUCCESS' });
+
+        setTimeout(() => {
+          dispatchTAPDownload({ type: 'DOWNLOAD_RESET' });
+          dispatchARTDownload({ type: 'DOWNLOAD_RESET' });
+        }, 3000);
+ 
         progressBar.style.strokeDasharray = `${(end / 100) * circumference}, ${circumference}`;
         progressValue.textContent = `${Math.round(end) || 0}%`;
       }
@@ -148,29 +145,9 @@ const Card = ({ accessToken, metadata }) => {
     setIsClickable(false);
     requestAnimationFrame(animate);
   };
-
-  // Handle API error responses
-  const handleApiResponse = async (response) => {
-    if (!response.ok)
-    {
-      throw new Error('Network response was not ok');
-    }
-  
-    try
-    {
-      return await response.json();
-    }
-    catch (error)
-    {
-      console.error('Error parsing JSON response:', error);
-      throw new Error('Invalid JSON response from the server');
-    }
-  };
   
   // Fetch tracks
   const fetchTracks = async (url, searchParameters, trackExtractor) => {
-    // const limit = url.includes('albums') ? 50 : 100;
-    // const response = await fetch(`${url}?limit=${limit}`, searchParameters);
     const response = await fetch(`${url}`, searchParameters);
 
     return handleApiResponse(response)
@@ -192,6 +169,8 @@ const Card = ({ accessToken, metadata }) => {
       .catch((error) => {
         setIsDownloading(false);
         setIsClickable(true);
+        dispatchTAPDownload({ type: 'DOWNLOAD_FAILED' });
+        dispatchARTDownload({ type: 'DOWNLOAD_FAILED' });
         console.error('Error:', error);
         throw new Error(`OPPS! FAILED TO FETCH ${url.includes('albums') ? 'ALBUM' : 'PLAYLIST'} TRACKS: ${error}`);
       });
@@ -224,6 +203,8 @@ const Card = ({ accessToken, metadata }) => {
     {
       setIsDownloading(false);
       setIsClickable(true);
+      dispatchTAPDownload({ type: 'DOWNLOAD_FAILED' });
+      dispatchARTDownload({ type: 'DOWNLOAD_FAILED' });
       console.error('Error:', error);
       throw new Error(`OPPS! ${postMsgKeyword} Post Request failed: ${error}`);
     }
@@ -279,6 +260,7 @@ const Card = ({ accessToken, metadata }) => {
 
     try
     {
+      dispatchTAPDownload({ type: 'DOWNLOAD_START' });
       if (metadata.type === 'album')
       {
         return handleAlbumTracks(0, metadata.total_tracks)
@@ -314,6 +296,7 @@ const Card = ({ accessToken, metadata }) => {
     {
       setIsDownloading(false);
       setIsClickable(true);
+      dispatchTAPDownload({ type: 'DOWNLOAD_FAILED' });
       console.error('Error:', err);
       throw new Error(`OPPS! TAP Post Request failed: ${err}`);
     }
@@ -353,12 +336,14 @@ const Card = ({ accessToken, metadata }) => {
 
     try
     {
+      dispatchARTDownload({ type: 'DOWNLOAD_START' });
       return handlePostRequest('/api/art', { ART_COVER });
     }
     catch (err)
     {
       setIsDownloading(false);
       setIsClickable(true);
+      dispatchARTDownload({ type: 'DOWNLOAD_FAILED' });
       console.error('Error:', err);
       throw new Error(`OPPS! ART Post Request failed: ${err}`);
     }
@@ -371,7 +356,7 @@ const Card = ({ accessToken, metadata }) => {
            onClick={(e) => POST_MUSIC_DATA()}
            ref={downloadTapButtonRef}
         >
-          <MdDownload />&nbsp;Download
+          {downloadTAPState.icon}&nbsp;{downloadTAPState.status}
         </a>
         
         <a className={`button-b bordered ${isClickable ? '' : 'clickable'}`}
