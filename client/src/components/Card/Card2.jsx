@@ -358,15 +358,16 @@ const Card = ({ accessToken, metadata }) => {
            onClick={(e) => POST_MUSIC_DATA()}
            ref={downloadTapButtonRef}
         >
-          {downloadTAPState.icon}&nbsp;{downloadTAPState.status}
+          <MdDownload />&nbsp;Download
+          {/* {downloadTAPState.icon}&nbsp;{downloadTAPState.status} */}
         </a>
         
         <a className={`button-b bordered ${isClickable ? '' : 'clickable'}`}
            onClick={(e) => POST_MUSIC_ART()}
            ref={downloadArtButtonRef}
         >
-          {/* <MdAlbum />&nbsp;Art */}
-          {downloadARTState.icon}&nbsp;{downloadARTState.status}
+          <MdAlbum />&nbsp;Art
+          {/* {downloadARTState.icon}&nbsp;{downloadARTState.status} */}
         </a>
       </div>
 
