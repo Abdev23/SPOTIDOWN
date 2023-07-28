@@ -34,7 +34,7 @@ export const downloadARTReducer = (state, action) => {
     case 'DOWNLOAD_FAILED':
       return { ...state, downloading: false, status: 'Failed', icon: <MdFileDownloadOff /> };
     case 'DOWNLOAD_RESET':
-      return { ...state, downloading: false, status: 'Download', icon: <MdAlbum /> };
+      return { ...state, downloading: false, status: 'Art', icon: <MdAlbum /> };
     default:
       return state;
   }

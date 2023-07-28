@@ -26,8 +26,8 @@ const Card = ({ accessToken, metadata }) => {
   });
   const [downloadARTState, dispatchARTDownload] = useReducer(downloadARTReducer, {
     downloading: false,
-    status: 'Download',
-    icon: <MdDownload />,
+    status: 'Art',
+    icon: <MdAlbum />,
   });
 
   const CARD_DATA = {
@@ -215,6 +215,7 @@ const Card = ({ accessToken, metadata }) => {
     // console.log('TAP metadata: ', metadata);
     const TAP = [];
     setIsDownloading(true);
+    setIsClickable(false);
 
     const handleAlbumTracks = async (offset, totalTracks) => {
     
@@ -307,6 +308,7 @@ const Card = ({ accessToken, metadata }) => {
     // console.log('ART metadata: ', metadata);
     const ART_COVER = {};
     setIsDownloading(true);
+    setIsClickable(false);
 
     if(metadata.type === 'album')
     {
@@ -363,7 +365,8 @@ const Card = ({ accessToken, metadata }) => {
            onClick={(e) => POST_MUSIC_ART()}
            ref={downloadArtButtonRef}
         >
-          <MdAlbum />&nbsp;Art
+          {/* <MdAlbum />&nbsp;Art */}
+          {downloadARTState.icon}&nbsp;{downloadARTState.status}
         </a>
       </div>
 
