@@ -2,8 +2,7 @@
 import React, { useState, useEffect } from 'react';
 
 import Alert from './Alert';
-// import Card from '../Card/Card';
-import Card from '../Card/Card2';
+import Card from '../Card/Card';
 import NotFound from '../NotFound/NotFound';
 import SearchLoading from './SearchLoading';
 import './SearchBar.css';

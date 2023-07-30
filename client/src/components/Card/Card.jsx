@@ -1,15 +1,7 @@
 
-import React, { useState, useEffect, useRef } from 'react';
-import { renderToString } from 'react-dom/server';
-import {
-  MdDownload,
-  MdDownloading,
-  MdOutlineDownloadDone,
-  MdFileDownloadOff,
-  MdAlbum,
-  MdPlayCircleFilled,
-} from 'react-icons/md';
+import React, { useState, useRef, useReducer } from 'react';
 
+import { reducer, initialState, handleApiResponse } from './Handlers';
 import './Card.css';
 
 
@@ -23,15 +15,7 @@ const Card = ({ accessToken, metadata }) => {
   const [duration, setDuration] = useState(12000);
   const [isDownloading, setIsDownloading] = useState(false);
   const [isClickable, setIsClickable] = useState(true);
-
-  const DownloadIcon = React.createElement(MdDownload);
-  const DownloadIconHtml = renderToString(DownloadIcon);
-  const ArtIcon = React.createElement(MdAlbum);
-  const ArtIconHtml =  renderToString(ArtIcon);
-  const DownloadDoneIcon = React.createElement(MdOutlineDownloadDone);
-  const DownloadDoneIconHtml = renderToString(DownloadDoneIcon);
-  const DownloadOffIcon = React.createElement(MdFileDownloadOff);
-  const DownloadOffIconHtml = renderToString(DownloadOffIcon);
+  const [buttonState, dispatch] = useReducer(reducer, initialState);
 
   const CARD_DATA = {
     image_src: '',
@@ -85,7 +69,7 @@ const Card = ({ accessToken, metadata }) => {
   }
   else
   {
-    CARD_DATA.ERROR = 'SOMETHING WENT WRONG NOTHING TO DISPLAY';
+    CARD_DATA.ERROR = 'SOMETHING WENT WRONG NO TAP TO DISPLAY';
   }
 
   const searchParameters = {
@@ -97,16 +81,10 @@ const Card = ({ accessToken, metadata }) => {
   }
 
   // Animate the progress bar
-  const animateProgressBar = (start, end, duration) => {
+  const animateProgressBar = (start, end, duration, url) => {
     setIsClickable(false);
     const progressBar = progressBarCircleRef.current;
     const progressValue = progressBarValueRef.current;
-
-    const downloadTapButton = downloadTapButtonRef.current;
-    const downloadArtButton = downloadArtButtonRef.current;
-    console.log('downloading button content: ', downloadTapButton, downloadArtButton);
-    // downloadTapButton.textContent = 'Downloading...';
-    // downloadArtButton.textContent = 'Downloading...';
 
     const circumference = 2 * Math.PI * progressBar.getAttribute('r');
 
@@ -122,6 +100,13 @@ const Card = ({ accessToken, metadata }) => {
       {
         setIsDownloading(false);
         setIsClickable(true);
+ 
+        if(url.includes('art')) dispatch({ type: 'DOWNLOAD_SUCCESS_TAP' });
+        else dispatch({ type: 'DOWNLOAD_SUCCESS_ART' });
+        setTimeout(() => {
+          dispatch({ type: 'RESET_BUTTONS' });
+        }, 3000);
+
         progressBar.style.strokeDasharray = `${(end / 100) * circumference}, ${circumference}`;
         progressValue.textContent = `${Math.round(end) || 0}%`;
       }
@@ -145,31 +130,18 @@ const Card = ({ accessToken, metadata }) => {
     setIsClickable(false);
     requestAnimationFrame(animate);
   };
-
-  // Handle API error responses
-  const handleApiResponse = (response) => {
-    /* if (!response.ok)
-    {
-      throw new Error('Network response was not ok');
-    } */
-    return response.json();
-  };
-
+  
   // Fetch tracks
   const fetchTracks = async (url, searchParameters, trackExtractor) => {
-    // const limit = url.includes('albums') ? 50 : 100;
-    // const response = await fetch(`${url}?limit=${limit}`, searchParameters);
     const response = await fetch(`${url}`, searchParameters);
-            
+
     return handleApiResponse(response)
       .then((data) => {
           if (!data)
           {
-            // return 'unknown album/playlist id';
             throw new Error(`Unknown ${url.includes('albums') ? 'album' : 'playlist'} id`);
           }
 
-          console.log(data);
           data.items
             .filter((item) => item.track !== null)
             .map((item) => trackExtractor(item));
@@ -182,6 +154,10 @@ const Card = ({ accessToken, metadata }) => {
       .catch((error) => {
         setIsDownloading(false);
         setIsClickable(true);
+        dispatch({ type: 'DOWNLOAD_FAILURE_TAP' });
+        setTimeout(() => {
+          dispatch({ type: 'RESET_BUTTONS' });
+        }, 3000);
         console.error('Error:', error);
         throw new Error(`OPPS! FAILED TO FETCH ${url.includes('albums') ? 'ALBUM' : 'PLAYLIST'} TRACKS: ${error}`);
       });
@@ -189,6 +165,12 @@ const Card = ({ accessToken, metadata }) => {
 
   // Handle post requests for TAP and ART
   const handlePostRequest = async (url, data) => {
+    let postMsgKeyword = '';
+    if (metadata.type === 'album') postMsgKeyword = 'Album';
+    else if (metadata.type === 'track') postMsgKeyword = 'Track';
+    else if (metadata.type === 'playlist') postMsgKeyword = 'Playlist';
+    else postMsgKeyword = '';
+
     try
     {
       const response = await fetch(url, {
@@ -196,27 +178,37 @@ const Card = ({ accessToken, metadata }) => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({data}),
+        body: JSON.stringify( data ),
       });
 
-      return handleApiResponse(response);
+      const responseData = await handleApiResponse(response);
+      console.log('estimated time to run the tap animation:', responseData.dur);
+      const dur = responseData.dur;
+      animateProgressBar(0, 100, dur, url);
     }
     catch (error)
     {
       setIsDownloading(false);
       setIsClickable(true);
+      if(url.includes('art')) dispatch({ type: 'DOWNLOAD_FAILURE_TAP' });
+      else dispatch({ type: 'DOWNLOAD_FAILURE_ART' });
+      setTimeout(() => {
+        dispatch({ type: 'RESET_BUTTONS' });
+      }, 3000);
       console.error('Error:', error);
-      throw new Error(`${data === 'TAP'} ? 'TAP' : 'ART' POST Request failed: ${error}`);
+      throw new Error(`OPPS! ${postMsgKeyword} Post Request failed: ${error}`);
     }
   };
 
-  // send the album/track/playlist metadata
+  // Send the album/track/playlist TAP
   const POST_MUSIC_DATA = async () => {
+    dispatch({ type: 'START_DOWNLOAD_TAP' });
     // console.log('TAP metadata: ', metadata);
     const TAP = [];
     setIsDownloading(true);
+    setIsClickable(false);
 
-    const handleAlbumTracks = (offset, totalTracks) => {
+    const handleAlbumTracks = async (offset, totalTracks) => {
     
       const albumTrackExtractor = (item) => {
         const albumTrack = {
@@ -255,37 +247,17 @@ const Card = ({ accessToken, metadata }) => {
       const playlistUrl = `https://api.spotify.com/v1/playlists/${metadata.id}/tracks`;
       return fetchTracks(playlistUrl, searchParameters, playlistTrackExtractor);
     };
-    
+
+    console.log('%c sendind this to server-TAP: ', 'color: black; background-color: #26bf2a', TAP);
+
     try
     {
       if (metadata.type === 'album')
       {
         return handleAlbumTracks(0, metadata.total_tracks)
-        .then(() => {  
-            console.log('%c sendind this to server-TAP: ', 'color: black; background-color: #26bf2a', TAP);
-
-            return fetch('/api/tap', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify({
-                TAP,
-              }),
-            });
-          })
-          .then((response) => response.json())
-          .then((data) => {
-            console.log('estimated time to run the album animation: ', data.dur);
-            const dur = data.dur;
-            animateProgressBar(0, 100, dur);
-          })
-          .catch((err) => {
-            setIsDownloading(false);
-            setIsClickable(true);
-            console.error('Error:', err);
-            throw new Error(`OPPS! Album Tracks Post Request failed: ${err}`);            
-          });
+          .then(() => {
+            handlePostRequest('/api/tap', { TAP });
+        });
       }
       else if (metadata.type === 'track')
       {
@@ -300,75 +272,36 @@ const Card = ({ accessToken, metadata }) => {
           'release_date': metadata.album.release_date || '',
         };
         TAP.push(track);
-
-        console.log('%c sendind this to server-TAP: ', 'color: black; background-color: #26bf2a', TAP);
-    
-        return fetch('/api/tap', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            TAP,
-          }),
-        })
-        .then((response) => response.json())
-        .then((data) => {
-          console.log('estimated time to run the track animation: ', data.dur);
-          const dur = data.dur;
-          animateProgressBar(0, 100, dur);
-        })
-        .catch((err) => {
-          setIsDownloading(false);
-          setIsClickable(true);
-          console.error('Error:', err);
-          throw new Error(`OPPS! Track Post Request failed: ${err}`);
-        });
+        return handlePostRequest('/api/tap', { TAP });
       }
       else if (metadata.type === 'playlist')
       {
         return handlePlaylistTracks(0, metadata.tracks.total)
           .then(() => {
-            console.log('%c sendind this to server-TAP: ', 'color: black; background-color: #26bf2a', TAP);
-            
-            return fetch('/api/tap', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify({
-                TAP,
-              }),
-            });
-          })
-          .then((response) => response.json())
-          .then((data) => {
-            console.log('estimated time to run the playlist animation: ', data.dur);
-            const dur = data.dur;
-            animateProgressBar(0, 100, dur);
-          })
-          .catch((err) => {
-            setIsDownloading(false);
-            setIsClickable(true);
-            console.error('Error:', err);
-            throw new Error(`OPPS! Playlist Tracks Post Request failed: ${err}`);
-          });
+            handlePostRequest('/api/tap', { TAP });
+        });
       }
     }
     catch (err)
     {
       setIsDownloading(false);
       setIsClickable(true);
+      dispatch({ type: 'DOWNLOAD_FAILURE_TAP' });
+      setTimeout(() => {
+        dispatch({ type: 'RESET_BUTTONS' });
+      }, 3000);
       console.error('Error:', err);
       throw new Error(`OPPS! TAP Post Request failed: ${err}`);
     }
   };
 
+  // Send the album /track/playlist COVER/ART
   const POST_MUSIC_ART = async () => {
-    // send the album /track/playlist cover/art
     // console.log('ART metadata: ', metadata);
     const ART_COVER = {};
+    dispatch({ type: 'START_DOWNLOAD_ART' });
     setIsDownloading(true);
+    setIsClickable(false);
 
     if(metadata.type === 'album')
     {
@@ -392,32 +325,25 @@ const Card = ({ accessToken, metadata }) => {
     {
       ART_COVER.ERROR = 'NO IMAGE TO DISPLAY';
       setIsDownloading(false);
-      return;
     }
 
     console.log('%c sendind this to server-ART_COVER: ', 'color: black; background-color: #26bf2a', ART_COVER);
 
-    return fetch('/api/art', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        ART_COVER
-      }),
-    })
-    .then((response) => response.json())
-    .then((data) => {
-      console.log('estimated time to run the art animation: ', data.dur);
-      const dur = data.dur;
-      animateProgressBar(0, 100, dur);
-    })    
-    .catch((err) => {
+    try
+    {
+      return handlePostRequest('/api/art', { ART_COVER });
+    }
+    catch (err)
+    {
       setIsDownloading(false);
       setIsClickable(true);
+      dispatch({ type: 'DOWNLOAD_FAILURE_ART' });
+      setTimeout(() => {
+        dispatch({ type: 'RESET_BUTTONS' });
+      }, 3000);
       console.error('Error:', err);
-      throw new Error(`ART Post Request failed ${err}`);
-    });
+      throw new Error(`OPPS! ART Post Request failed: ${err}`);
+    }
   };
 
   return (
@@ -426,15 +352,17 @@ const Card = ({ accessToken, metadata }) => {
         <a className={`button-b ${isClickable ? '' : 'clickable'}`}
            onClick={(e) => POST_MUSIC_DATA()}
            ref={downloadTapButtonRef}
+           disabled={buttonState.downloadingArt}
         >
-          <MdDownload />&nbsp;Download
+          {buttonState.tapIcon}&nbsp;{buttonState.tapStatus}
         </a>
         
         <a className={`button-b bordered ${isClickable ? '' : 'clickable'}`}
            onClick={(e) => POST_MUSIC_ART()}
            ref={downloadArtButtonRef}
+           disabled={buttonState.downloadingArt}
         >
-          <MdAlbum />&nbsp;Art
+          {buttonState.artIcon}&nbsp;{buttonState.artStatus}
         </a>
       </div>
 
