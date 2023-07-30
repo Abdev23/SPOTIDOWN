@@ -27,13 +27,6 @@ app.use( cors() );
 app.use( xss() );
 
 
-
-/* app.get('/', (req, res) => {
-  console.log(req.protocol + '://' + req.get('host') + req.originalUrl);
-  console.log('HOME GET ROUTE');
-  res.status(200).sendFile(path.join(__dirname, './public/index.html'));
-}); */
-
 app.get('/api', (req, res) => {
   res.json({ message: "Hello from 🚀 express server!" });
 });
@@ -57,7 +50,6 @@ app.post('/api/art', (req, res) => {
 app.all('*', (req, res) => {
   res.status(404).send('resource not found');
 });
-
 
 
 const port = process.env.PORT || 5010;
