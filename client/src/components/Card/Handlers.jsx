@@ -8,33 +8,62 @@ import {
 } from 'react-icons/md';
 
 
-// Handle TAP downloadIcon/text button
-export const downloadTAPReducer = (state, action) => {
-  switch (action.type) {
-    case 'DOWNLOAD_START':
-      return { ...state, downloading: true, status: 'Downloading...', icon: <MdDownloading /> };
-    case 'DOWNLOAD_SUCCESS':
-      return { ...state, downloading: false, status: 'Downloaded', icon: <MdOutlineDownloadDone /> };
-    case 'DOWNLOAD_FAILED':
-      return { ...state, downloading: false, status: 'Failed', icon: <MdFileDownloadOff /> };
-    case 'DOWNLOAD_RESET':
-      return { ...state, downloading: false, status: 'Download', icon: <MdDownload /> };
-    default:
-      return state;
-  }
+// Handle TAP/ART Icon-text buttons
+export let initialState = {
+  downloadingTap: false,
+  downloadingArt: false,
+  tapStatus: 'Download',
+  artStatus: 'Art',
+  tapIcon: <MdDownload />,
+  artIcon: <MdAlbum />
 };
 
-// Handle ART downloadIcon/text button
-export const downloadARTReducer = (state, action) => {
+export const reducer = (state, action) => {
   switch (action.type) {
-    case 'DOWNLOAD_START':
-      return { ...state, downloading: true, status: 'Downloading...', icon: <MdDownloading /> };
-    case 'DOWNLOAD_SUCCESS':
-      return { ...state, downloading: false, status: 'Downloaded', icon: <MdOutlineDownloadDone /> };
-    case 'DOWNLOAD_FAILED':
-      return { ...state, downloading: false, status: 'Failed', icon: <MdFileDownloadOff /> };
-    case 'DOWNLOAD_RESET':
-      return { ...state, downloading: false, status: 'Art', icon: <MdAlbum /> };
+    case 'START_DOWNLOAD_TAP':
+      return {
+        ...state,
+        downloadingTap: true,
+        tapStatus: 'Downloading...',
+        tapIcon: <MdDownloading />,
+      };
+    case 'START_DOWNLOAD_ART':
+      return {
+        ...state,
+        downloadingArt: true,
+        artStatus: 'Downloading...',
+        artIcon: <MdDownloading />,
+      };
+    case 'DOWNLOAD_SUCCESS_TAP':
+      return {
+        ...state,
+        downloadingArt: false,
+        artStatus: 'Downloaded',
+        artIcon: <MdOutlineDownloadDone />,
+      };
+    case 'DOWNLOAD_SUCCESS_ART':
+      return {
+        ...state,
+        downloadingTap: false,
+        tapStatus: 'Downloaded',
+        tapIcon: <MdOutlineDownloadDone />,
+      };
+    case 'DOWNLOAD_FAILURE_TAP':
+      return {
+        ...state,
+        downloadingArt: false,
+        artStatus: 'Failed',
+        artIcon: <MdFileDownloadOff />,
+      };
+    case 'DOWNLOAD_FAILURE_ART':
+      return {
+        ...state,
+        downloadingTap: false,
+        tapStatus: 'Failed',
+        tapIcon: <MdFileDownloadOff />,
+      };
+    case 'RESET_BUTTONS':
+      return initialState;
     default:
       return state;
   }
