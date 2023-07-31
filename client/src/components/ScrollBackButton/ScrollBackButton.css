@@ -1,0 +1,38 @@
+
+/*
+==============
+SCROLLBACK CSS
+==============
+*/
+
+.scroll-back-button {
+  position: fixed;
+  bottom: 15px;
+  right: 15px;
+  width: 60px;
+  height: 60px;
+  background-color: var(--clr-primary-5);
+  color: var(--clr-black);
+  padding: 10px 20px;
+  border: none;
+  cursor: pointer;
+  border-radius: 50%;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  z-index: 5;
+}
+
+.scroll-back-button:active {
+  outline: none;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  tap-highlight-color: transparent;
+}
+
+.scroll-back-button > svg {
+  position: inherit;
+  right: 30px;
+  bottom: 30px;
+  width: 30px;
+  height: 30px;
+}

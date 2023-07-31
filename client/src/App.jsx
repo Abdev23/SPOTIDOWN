@@ -16,6 +16,7 @@ import ContactUs from './pages/ContactUs/ContactUs';
 import Terms from './pages/Terms/Terms';
 import PrivacyPolicy from './pages/PrivacyPolicy/PrivacyPolicy';
 import Disclaimer from './pages/Disclaimer/Disclaimer';
+import ScrollBackButton from './components/ScrollBackButton/ScrollBackButton';
 import './App.css';
 
 
@@ -25,6 +26,7 @@ const Layout = () => {
       <NavBar />
       <Outlet />
       <Footer />
+      <ScrollBackButton />
     </div>
   );
 }

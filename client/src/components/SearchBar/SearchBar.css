@@ -78,8 +78,8 @@ SEARCHBAR CSS
 }
 
 .submit-btn {
-  background: var(--clr-black);
-  color: var(--clr-primary-5);
+  background: var(--clr-primary-5);
+  color: var(--clr-black);
   border: 3px solid var(--clr-primary-5);
   flex: 0 0 5rem;
   display: grid;
@@ -99,11 +99,6 @@ SEARCHBAR CSS
   display: flex;
   align-items: center;
   justify-content: center;
-}
-
-.submit-btn:hover {
-  background: var(--clr-primary-5);
-  color: var(--clr-black);
 }
 
 .grocery-container {
