@@ -106,7 +106,6 @@ function App() {
     function checkOnlineStatus() {
       setOnline(navigator.onLine);
 
-      // Check Spotify API status when online status changes
       if (navigator.onLine) {
         checkSpotifyAPIStatus()
           .then((isOnline) => {
@@ -159,7 +158,7 @@ function App() {
                              </span>
             }
           </span>
-          <span className="offline-text"> Please check your internet connection. </span>
+          <span className='offline-text'> Please check your internet connection. </span>
         </div>
       )
       }

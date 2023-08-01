@@ -17,6 +17,24 @@ const ScrollBackButton = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  const handleButtonClick = (e) => {
+    const ripple = document.createElement('span');
+    ripple.classList.add('ripple');
+    e.currentTarget.appendChild(ripple);
+
+    const x = e.clientX - e.currentTarget.offsetLeft;
+    const y = e.clientY - e.currentTarget.offsetTop;
+
+    ripple.style.left = `${x}px`;
+    ripple.style.top = `${y}px`;
+
+    setTimeout(() => {
+      ripple.remove();
+    }, 300);
+
+    scrollToTop();
+  };
+
   useEffect(() => {
     window.addEventListener('scroll', handleScroll);
 
@@ -29,8 +47,8 @@ const ScrollBackButton = () => {
     <div>
     {
       showButton && (
-        <button className="scroll-back-button"
-                onClick={scrollToTop}
+        <button className='scroll-back-button'
+                onClick={handleButtonClick}
         >
           <MdArrowUpward />
         </button>

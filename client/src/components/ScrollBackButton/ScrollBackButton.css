@@ -19,6 +19,12 @@ SCROLLBACK CSS
   border-radius: 50%;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
   z-index: 5;
+  overflow: hidden;
+}
+
+.scroll-back-button:hover {
+  background: var(--clr-primary-2);
+  cursor: pointer;
 }
 
 .scroll-back-button:active {
@@ -35,4 +41,28 @@ SCROLLBACK CSS
   bottom: 30px;
   width: 30px;
   height: 30px;
+}
+
+.scroll-back-button span {
+  position: absolute;
+  border-radius: 50%;
+  background-color: rgba(0, 0, 0, 0.3);
+  width: 100px;
+  height: 100px;
+  margin-top: -50px;
+  margin-left: -50px;
+  animation: ripple 1s;
+  opacity: 0;
+}
+
+@keyframes ripple {
+  from {
+      opacity: 1;
+      transform: scale(0);
+  }
+
+  to {
+      opacity: 0;
+      transform: scale(10);
+  }
 }
