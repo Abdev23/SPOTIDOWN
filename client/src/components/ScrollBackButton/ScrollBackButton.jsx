@@ -8,7 +8,7 @@ import './ScrollBackButton.css';
 const ScrollBackButton = () => {
   const [showButton, setShowButton] = useState(false);
   const [fixed, setFixed] = useState(false);
-  const mybutton = useRef(null);
+  const scrollBackBtnRef = useRef(null);
 
   const handleScroll = () => {
     if (window.scrollY > 300)
@@ -20,23 +20,24 @@ const ScrollBackButton = () => {
       setShowButton(false);
     }
 
-    if (mybutton.current)
+    if (scrollBackBtnRef.current)
     {
       let footer = document.querySelector('.footer');
       const footStartPos = footer.getBoundingClientRect().y;
       const windowHeight = window.innerHeight;
-      const btnMarginBottom = parseInt(window.getComputedStyle(mybutton.current).getPropertyValue('bottom'));
+      const btnMarginBottom = parseInt(window.getComputedStyle(scrollBackBtnRef.current).getPropertyValue('bottom'));
 
       if (windowHeight > footStartPos)
       {
         // console.log((windowHeight - footStartPos) + btnMarginBottom);
-        // console.log('overlaping');
-        mybutton.current.style.bottom = `${(windowHeight - footStartPos) + btnMarginBottom}px`;
+        console.log('overlaping');
+
+        // scrollBackBtnRef.current.style.bottom = `${(windowHeight - footStartPos) + btnMarginBottom}px`;
         setFixed(true);
       }
       else
       {
-        mybutton.current.style.bottom = '';
+        scrollBackBtnRef.current.style.bottom = '';
         setFixed(false);
       }
     }
@@ -78,7 +79,7 @@ const ScrollBackButton = () => {
       showButton && (
         <button className={`scroll-back-button ${fixed ? 'fixed' : ''}`}
                 onClick={handleButtonClick}
-                ref={mybutton}
+                ref={scrollBackBtnRef}
         >
           <MdArrowUpward />
         </button>
