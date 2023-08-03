@@ -20,35 +20,18 @@ const ScrollBackButton = () => {
       setShowButton(false);
     }
 
-    /* const windowHeight = window.innerHeight;
-    const pageHeight = document.body.scrollHeight;
-    const scrollPosition = window.scrollY;
-    const remainingDistance = pageHeight - scrollPosition - windowHeight;
-    const thresholdDistance = 200;
-    
-    const footer = document.querySelector('.footer');
-    const footerHeight = footer.offsetHeight;
-    // console.log( 'page height: ', pageHeight, 'footer height: ', footerHeight, 'REMIANING DISTANE: ', remainingDistance);
-
-    if (remainingDistance === footerHeight)
-    {
-      console.log('OVERLAPING !!');
-      setFixed(true);
-    }
-    else
-    {
-      setFixed(false);
-    } */
-
     if (mybutton.current)
     {
-      const btnMarginBottom = parseInt(window.getComputedStyle(mybutton.current).getPropertyValue('bottom'));
       let footer = document.querySelector('.footer');
       const footStartPos = footer.getBoundingClientRect().y;
+      const windowHeight = window.innerHeight;
+      const btnMarginBottom = parseInt(window.getComputedStyle(mybutton.current).getPropertyValue('bottom'));
 
-      if (window.innerHeight > footStartPos)
+      if (windowHeight > footStartPos)
       {
-        mybutton.current.style.bottom = `${(window.innerHeight - footStartPos) + btnMarginBottom}px`;
+        // console.log((windowHeight - footStartPos) + btnMarginBottom);
+        // console.log('overlaping');
+        mybutton.current.style.bottom = `${(windowHeight - footStartPos) + btnMarginBottom}px`;
         setFixed(true);
       }
       else
