@@ -11,7 +11,7 @@ SCROLLBACK CSS
   right: 15px;
   width: 60px;
   height: 60px;
-  background-color: var(--clr-primary-5);
+  background: var(--clr-primary-5);
   color: var(--clr-black);
   padding: 10px 20px;
   border: none;
@@ -20,11 +20,11 @@ SCROLLBACK CSS
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
   z-index: 5;
   overflow: hidden;
+  opacity: 0.6;
 }
 
 .scroll-back-button:hover {
-  background: var(--clr-primary-2);
-  cursor: pointer;
+  opacity: 1;
 }
 
 .scroll-back-button:active {
@@ -36,9 +36,10 @@ SCROLLBACK CSS
 }
 
 .scroll-back-button > svg {
-  position: inherit;
-  right: 30px;
-  bottom: 30px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   width: 30px;
   height: 30px;
 }
