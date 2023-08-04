@@ -22,17 +22,17 @@ const ScrollBackButton = () => {
 
     if (scrollBackBtnRef.current)
     {
-      let footer = document.querySelector('.footer');
+      const footer = document.querySelector('.footer');
       const footStartPos = footer.getBoundingClientRect().y;
       const windowHeight = window.innerHeight;
       const btnMarginBottom = parseInt(window.getComputedStyle(scrollBackBtnRef.current).getPropertyValue('bottom'));
 
       if (windowHeight > footStartPos)
       {
-        // console.log((windowHeight - footStartPos) + btnMarginBottom);
-        console.log('overlaping');
+        const overlap = (windowHeight - footStartPos) + btnMarginBottom;
+        console.log('overlapping: ', overlap);
 
-        // scrollBackBtnRef.current.style.bottom = `${(windowHeight - footStartPos) + btnMarginBottom}px`;
+        scrollBackBtnRef.current.style.bottom = `${overlap}px`;
         setFixed(true);
       }
       else

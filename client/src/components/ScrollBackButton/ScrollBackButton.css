@@ -54,6 +54,7 @@ SCROLLBACK CSS
   margin-left: -50px;
   animation: ripple 1s;
   opacity: 0;
+  pointer-events: none;
 }
 
 @keyframes ripple {
