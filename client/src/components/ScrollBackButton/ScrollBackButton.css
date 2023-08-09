@@ -9,8 +9,8 @@ SCROLLBACK CSS
   position: fixed;
   bottom: 15px;
   right: 15px;
-  width: 60px;
-  height: 60px;
+  width: 50px;
+  height: 50px;
   background: var(--clr-primary-5);
   color: var(--clr-black);
   padding: 10px 20px;
@@ -55,6 +55,32 @@ SCROLLBACK CSS
   animation: ripple 1s;
   opacity: 0;
   pointer-events: none;
+}
+
+.scroll-back-button > .ping {
+  position: fixed;
+  bottom: 15px;
+  right: 15px;
+  width: 50px;
+  height: 50px;
+  background: var(--clr-primary-5);
+  color: var(--clr-black);
+  padding: 10px 20px;
+  border: none;
+  cursor: pointer;
+  border-radius: 50%;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  z-index: 5;
+  overflow: hidden;
+  opacity: 0.6;
+  animation: ping 1s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+@keyframes ping {
+  75%, 100% {
+    transform: scale(1.5);
+    opacity: 0;
+  }
 }
 
 @keyframes ripple {

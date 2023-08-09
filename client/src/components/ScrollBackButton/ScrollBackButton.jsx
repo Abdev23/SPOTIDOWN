@@ -20,7 +20,7 @@ const ScrollBackButton = () => {
       setShowButton(false);
     }
 
-    if (scrollBackBtnRef.current)
+    /* if (scrollBackBtnRef.current)
     {
       const footer = document.querySelector('.footer');
       const footStartPos = footer.getBoundingClientRect().y;
@@ -40,7 +40,7 @@ const ScrollBackButton = () => {
         scrollBackBtnRef.current.style.bottom = '';
         setFixed(false);
       }
-    }
+    } */
   };
 
   const scrollToTop = () => {
@@ -82,6 +82,7 @@ const ScrollBackButton = () => {
                 ref={scrollBackBtnRef}
         >
           <MdArrowUpward />
+          <span className='ping'></span>
         </button>
       )
     }
